@@ -1,0 +1,6 @@
+/home/akagi/Documents/dlibTest/project/build/CMakeFiles/rebuild_cache.dir
+/home/akagi/Documents/dlibTest/project/build/CMakeFiles/edit_cache.dir
+/home/akagi/Documents/dlibTest/project/build/CMakeFiles/main.dir
+/home/akagi/Documents/dlibTest/project/build/dlib_build/CMakeFiles/edit_cache.dir
+/home/akagi/Documents/dlibTest/project/build/dlib_build/CMakeFiles/rebuild_cache.dir
+/home/akagi/Documents/dlibTest/project/build/dlib_build/CMakeFiles/dlib.dir
