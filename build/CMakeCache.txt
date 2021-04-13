@@ -368,7 +368,7 @@ DLIB_PNG_SUPPORT:BOOL=ON
 //Disable this if you don't want to use a BLAS library
 DLIB_USE_BLAS:BOOL=ON
 
-//Disable this if you don't want to use a BLAS library
+//Disable this if you don't want to use NVIDIA CUDA
 DLIB_USE_CUDA:STRING=OFF
 
 //Disable this if you don't want to use a LAPACK library
@@ -630,7 +630,7 @@ cblas_lib:FILEPATH=/usr/lib/x86_64-linux-gnu/libcblas.so
 dlib_BINARY_DIR:STATIC=/home/akagi/Documents/dlibTest/project/build/dlib_build
 
 //Dependencies for the target
-dlib_LIB_DEPENDS:STATIC=general;-lpthread;general;/usr/lib/x86_64-linux-gnu/libnsl.so;general;/usr/lib/x86_64-linux-gnu/libSM.so;general;/usr/lib/x86_64-linux-gnu/libICE.so;general;/usr/lib/x86_64-linux-gnu/libX11.so;general;/usr/lib/x86_64-linux-gnu/libXext.so;general;/usr/lib/x86_64-linux-gnu/libpng.so;general;/usr/lib/x86_64-linux-gnu/libz.so;general;/usr/lib/x86_64-linux-gnu/libjpeg.so;general;/usr/lib/x86_64-linux-gnu/libatlas.so;general;/usr/lib/x86_64-linux-gnu/libcblas.so;general;/usr/lib/x86_64-linux-gnu/liblapack.so;
+dlib_LIB_DEPENDS:STATIC=general;-lpthread;general;/usr/lib/x86_64-linux-gnu/libnsl.so;general;/usr/lib/x86_64-linux-gnu/libSM.so;general;/usr/lib/x86_64-linux-gnu/libICE.so;general;/usr/lib/x86_64-linux-gnu/libX11.so;general;/usr/lib/x86_64-linux-gnu/libXext.so;general;/usr/lib/x86_64-linux-gnu/libpng.so;general;/usr/lib/x86_64-linux-gnu/libz.so;general;/usr/lib/x86_64-linux-gnu/libjpeg.so;general;/usr/lib/x86_64-linux-gnu/libcblas.so;general;/usr/lib/x86_64-linux-gnu/liblapack.so;
 
 //Value Computed by CMake
 dlib_SOURCE_DIR:STATIC=/home/akagi/dlib-19.6/dlib
@@ -1049,6 +1049,8 @@ LAPACK_REFERENCE_lapack_VERSION:INTERNAL=
 LIBJPEG_IS_GOOD:INTERNAL=1
 //Have function png_create_read_struct
 LIBPNG_IS_GOOD:INTERNAL=1
+//Have function sgetrf_single
+OPENBLAS_HAS_LAPACK:INTERNAL=
 //ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
 PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
 PKG_FONTCONFIG_CFLAGS:INTERNAL=-I/usr/include/uuid;-I/usr/include/freetype2;-I/usr/include/libpng16

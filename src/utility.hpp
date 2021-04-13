@@ -45,11 +45,6 @@ namespace utility{
 		long num_crops
 	);
 
-	void process_image(
-		std::string network_path,
-		std::string ILSVRC_path
-	);
-
 	std::vector<Image_info> get_imagenet_listing(
 		const std::string& root_directory ,
 		const std::string& image_path_file,

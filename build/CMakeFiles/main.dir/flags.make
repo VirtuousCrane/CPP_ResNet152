@@ -6,5 +6,5 @@ CXX_FLAGS =  -Wreturn-type -O3 -DNDEBUG   -DDLIB_JPEG_SUPPORT -DDLIB_USE_BLAS -D
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/akagi/dlib-19.6/dlib/.. 
+CXX_INCLUDES = -I/home/akagi/Documents/dlibTest/project/include -I/home/akagi/dlib-19.6/dlib/.. 
 

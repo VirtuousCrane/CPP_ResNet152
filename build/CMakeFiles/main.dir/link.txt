@@ -1,1 +1,1 @@
-/usr/bin/c++   -Wreturn-type -O3 -DNDEBUG  -rdynamic CMakeFiles/main.dir/main.cpp.o  -o main  dlib_build/libdlib.a -lpthread -lnsl -lSM -lICE -lX11 -lXext -lpng -lz -ljpeg -latlas -lcblas -llapack 
+/usr/bin/c++   -Wreturn-type -O3 -DNDEBUG  -rdynamic CMakeFiles/main.dir/main.cpp.o CMakeFiles/main.dir/src/utility.cpp.o  -o main  dlib_build/libdlib.a -lpthread -lnsl -lSM -lICE -lX11 -lXext -lpng -lz -ljpeg -lcblas -llapack 

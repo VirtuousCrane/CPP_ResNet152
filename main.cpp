@@ -27,7 +27,7 @@ using namespace utility;
 =========================================================================
  The Architecture that will be used in this project
 =========================================================================
-									
+
 =========================================================================
  ResNet 152
 =========================================================================
@@ -150,7 +150,7 @@ using net_type = loss_multiclass_log<
 			>>>>>>>>>>>>>;
 
 // ======================================================================
-
+void process_image(string network_path, string ILSVRC_path, int argc);
 int main(int argc, char** argv) try{
 	if (argc == 1){
 		cout << "Please enter path to dataset as cmd line argument";
@@ -192,7 +192,7 @@ int main(int argc, char** argv) try{
 	auto f = [&data, &listing](time_t seed){
 		dlib::rand rnd(time(0)+seed);
 		matrix<rgb_pixel> img;
-		std::pair<Image_info, matrix<rgb_pixel>> temp;
+		std::pair<utility::Image_info, matrix<rgb_pixel>> temp;
 		while(data.is_enabled()){
 			temp.first = listing[rnd.get_random_32bit_number() % listing.size()];
 			load_image(img, temp.first.get_filename());
@@ -200,10 +200,10 @@ int main(int argc, char** argv) try{
 			data.enqueue(temp);
 		}
 	};
-	std::thread data_loader1([f](){f(1);});
-	std::thread data_loader2([f](){f(2);});
-	std::thread data_loader3([f](){f(3);});
-	std::thread data_loader4([f](){f(4);});
+	std::thread data_loader1([f](){ f(1); });
+	std::thread data_loader2([f](){ f(2); });
+	std::thread data_loader3([f](){ f(3); });
+	std::thread data_loader4([f](){ f(4); });
 
 	while(trainer.get_learning_rate() >= initial_learning_rate * 1e-3){
 		samples.clear();
@@ -231,4 +231,45 @@ int main(int argc, char** argv) try{
 	serialize("src/ResNet152.dnn") << net;
 } catch(std::exception& e){
 	cout << e.what() << endl;
+}
+
+void process_image(string network_path, string ILSVRC_path, int argc){
+	try{
+		std::vector<string> labels;
+		net_type net;
+		deserialize(network_path) >> net >> labels;
+
+		// Make the last layer of the network be softmax
+		softmax<net_type::subnet_type> snet;
+		snet.subnet() = net.subnet()        ;
+
+		dlib::array<matrix<rgb_pixel>> images;
+		matrix<rgb_pixel> img, crop          ;
+
+		dlib::rand rnd  ;
+		image_window win;
+
+		for(int i=0; i<argc; ++i){
+			load_image(img, ILSVRC_path);
+			const int num_crops = 16;
+
+			randomly_crop_images(img, images, rnd, num_crops);
+
+			matrix<float, 1, 1000> p = sum_rows(mat(snet(images.begin(), images.end())))/num_crops;
+
+			win.set_image(img);
+
+			// Getting the top-5 probabilities
+			for(int k=0; k<5; ++k){
+				unsigned long predicted_label = index_of_max(p);
+				cout << p(predicted_label) << ": " << labels[predicted_label] << endl;
+				p(predicted_label) = 0;
+			}
+
+			cout << "Hit enter to process the next image";
+			cin.get();
+		}
+	}catch(std::exceptions& e){
+		cout << e.what() << endl;
+	}
 }

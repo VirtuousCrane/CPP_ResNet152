@@ -16,6 +16,24 @@ dlib/data_io.h
 src/utility.hpp
 /home/akagi/Documents/dlibTest/project/src/utility.hpp
 
+/home/akagi/Documents/dlibTest/project/src/utility.cpp
+utility.hpp
+/home/akagi/Documents/dlibTest/project/src/utility.hpp
+fstream
+-
+vector
+-
+dlib/dnn.h
+-
+iostream
+-
+dlib/data_io.h
+-
+dlib/gui_widgets.h
+-
+dlib/image_transforms.h
+-
+
 /home/akagi/Documents/dlibTest/project/src/utility.hpp
 string
 -
