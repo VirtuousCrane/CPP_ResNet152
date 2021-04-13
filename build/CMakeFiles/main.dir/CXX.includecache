@@ -6,16 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/akagi/Documents/dlibTest/project/main.cpp
-dlib/dnn.h
--
-iostream
--
-dlib/data_io.h
--
-src/utility.hpp
-/home/akagi/Documents/dlibTest/project/src/utility.hpp
-
 /home/akagi/Documents/dlibTest/project/src/utility.cpp
 utility.hpp
 /home/akagi/Documents/dlibTest/project/src/utility.hpp
