@@ -1,4 +1,5 @@
 #include "utility.hpp"
+#include <fstream>
 #include <vector>
 #include <dlib/dnn.h>
 #include <iostream>
@@ -47,6 +48,10 @@ class Image_info{
 	void set_numeric_label(long n){
 		numeric_label_ = n;
 	}
+
+	void set_filename(string& fn){
+		filename_  = fn;
+	}
 };
 
 rectangle random_crop(
@@ -69,13 +74,30 @@ rectangle random_crop(
 	return move_rect(rect, offset);
 }
 
+void randomly_crop_image(
+	const matrix<rgb_pixel>& img,
+	matrix<rgb_pixel>& crop     ,
+	dlib::rand& rnd
+	){
+	/* Randomly Crops and Augments an image */
+
+	auto rect = random_crop(img, rnd);
+	extract_image_chip(img, chip_details(rect, chip_dims(227, 227)), crop);
+
+	// Image Augmentation
+	if(rnd.get_random_double() > 0.5){
+		crop = fliplr(crop);
+	}
+	apply_random_color_offset(crop, rnd);
+}
+
 void randomly_crop_images(
 		const matrix<rgb_pixel>& img,
 		dlib::array<matrix<rgb_pixel>>& crops,
 		dlib::rand& rnd,
 		long num_crops
 		){
-	/* Randomly Crops and Augments an image */
+	/* Randomly Crops and Augments multiple images */
 
 	std::vector<chip_details> dets;
 	// chip_details: Describes where an image chip is to be extracted from
@@ -138,10 +160,32 @@ void process_image(string network_path, string ILSVRC_path){
 	}
 }
 
-vector<Image_info> get_imagenet_train_listing(
-	const string& images_folder
+vector<Image_info> get_imagenet_listing(
+	const string& root_directory ,
+	const string& image_path_file,
+	const string& label_file
 ){
+	ifstream label(label_file)          ;
+	ifstream image_path(image_path_file);
+	string   label_line, path           ;
+	string   filename                   ;
+	string   previous_label             ;
+
 	vector<Image_info> results;
-	Image_info temp;
-	temp.set_numeric_label(0);
+	long numeric_label = -1   ;
+
+	while(getline(label, label_line) && getline(image_path, path)){
+		filename = root_directory + "/" + path;
+		if(!file_exists(filename)){
+			cout << "File: <"  << filename << "> does not exist." << endl;
+		}
+		if(label_line != previous_label){
+			++numeric_label;
+		}
+
+		Image_info temp(label_line, filename, numeric_label);
+		results.push_back(temp);
+	}
+
+	return results;
 }

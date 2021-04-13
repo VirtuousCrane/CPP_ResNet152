@@ -157,9 +157,9 @@ int main(int argc, char** argv) try{
 		return 1;
 	}
 
-	auto listing = get_imagenet_train_listing(string(argv[1])+"/Data/CLS-LOC/train/");
+	auto listing = get_imagenet_listing(string(argv[1]), string(argv[2]), string(argv[3]));
 	cout << "No. of image in dataset: " << listing.size() << endl;
-	const auto number_of_classes = listing.back().numeric_label+1;
+	const auto number_of_classes = listing.back().get_numeric_label()+1;
 
 	set_dnn_prefer_smallest_algorithms();
 
@@ -196,7 +196,7 @@ int main(int argc, char** argv) try{
 		while(data.is_enabled()){
 			temp.first = listing[rnd.get_random_32bit_number() % listing.size()];
 			load_image(img, temp.first.get_filename());
-			utility::randomly_crop_images(img, temp.second, rnd);
+			utility::randomly_crop_image(img, temp.second, rnd);
 			data.enqueue(temp);
 		}
 	};
@@ -214,7 +214,7 @@ int main(int argc, char** argv) try{
 			data.dequeue(img);
 
 			samples.push_back(std::move(img.second));
-			labels.push_back(img.first.numeric_label);
+			labels.push_back(img.first.get_numeric_label());
 		}
 
 		trainer.train_one_step(samples, labels);
@@ -229,8 +229,6 @@ int main(int argc, char** argv) try{
 	trainer.get_net();
 	cout << "Saving Network" << endl;
 	serialize("src/ResNet152.dnn") << net;
-	}
-
 } catch(std::exception& e){
 	cout << e.what() << endl;
 }

@@ -18,15 +18,24 @@ namespace utility{
 			Image_info();
 			Image_info(std::string label, std::string filename, long num);
 
-			std::string get_filename()       ;
-			std::string get_label()          ;
-			long get_numeric_label()         ;
-			void set_label(std::string label);
+			std::string get_filename()        ;
+			std::string get_label()           ;
+			long get_numeric_label()          ;
+
+			void set_label(std::string label) ;
+			void set_numeric_label(long n)    ;
+			void set_filename(std::string& fn);
 	};
 
 	dlib::rectangle random_crop(
 			const dlib::matrix<dlib::rgb_pixel>& img,
 			dlib::rand& rnd
+	);
+
+	void randomly_crop_image(
+		const dlib::matrix<dlib::rgb_pixel> &img,
+		dlib::matrix<dlib::rgb_pixel>& crop    ,
+		dlib::rand& rnd
 	);
 
 	void randomly_crop_images(
@@ -41,8 +50,10 @@ namespace utility{
 		std::string ILSVRC_path
 	);
 
-	std::vector<Image_info> get_imagenet_train_listing(
-		const std::string& images_folder
+	std::vector<Image_info> get_imagenet_listing(
+		const std::string& root_directory ,
+		const std::string& image_path_file,
+		const std::string& label_file
 	);
 }
 
