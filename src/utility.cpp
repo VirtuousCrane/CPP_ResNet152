@@ -11,49 +11,41 @@ using namespace std;
 using namespace dlib;
 
 namespace utility{
-	class Image_info{
-		private:
-			string filename_   ;
-			string label_      ;
-			long numeric_label_;
+	Image_info::Image_info(){
+		filename_      = "_"     ;
+		label_         = "others";
+		numeric_label_ = 0       ;
+	}
 
-		public:
-			Image_info(){
-				filename_      = "_"     ;
-				label_         = "others";
-				numeric_label_ = 0       ;
-			}
+	Image_info::Image_info(string label, string filename, long num){
+		filename_      = filename;
+		label_         = label   ;
+		numeric_label_ = num     ;
+	}
 
-			Image_info(string label, string filename, long num){
-				filename_      = filename;
-				label_         = label   ;
-				numeric_label_ = num     ;
-			}
+	string Image_info::get_filename(){
+		return filename_;
+	}
 
-		string get_filename(){
-			return filename_;
-		}
+	string Image_info::get_label(){
+		return label_;
+	}
 
-		string get_label(){
-			return label_;
-		}
+	long Image_info::get_numeric_label(){
+		return numeric_label_;
+	}
 
-		long get_numeric_label(){
-			return numeric_label_;
-		}
+	void Image_info::set_label(string label){
+		label_ = label;
+	}
 
-		void set_label(string label){
-			label_ = label;
-		}
+	void Image_info::set_numeric_label(long n){
+		numeric_label_ = n;
+	}
 
-		void set_numeric_label(long n){
-			numeric_label_ = n;
-		}
-
-		void set_filename(string& fn){
-			filename_  = fn;
-		}
-	};
+	void Image_info::set_filename(string& fn){
+		filename_  = fn;
+	}
 
 	rectangle random_crop(
 			const matrix<rgb_pixel>& img,
@@ -120,7 +112,7 @@ namespace utility{
 		}
 	}
 
-	vector<Image_info> get_imagenet_listing(
+	std::vector<Image_info> get_imagenet_listing(
 		const string& root_directory ,
 		const string& image_path_file,
 		const string& label_file
@@ -131,7 +123,7 @@ namespace utility{
 		string   filename                   ;
 		string   previous_label             ;
 
-		vector<Image_info> results;
+		std::vector<Image_info> results;
 		long numeric_label = -1   ;
 
 		while(getline(label, label_line) && getline(image_path, path)){

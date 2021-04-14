@@ -7,44 +7,6 @@ using namespace std;
 using namespace dlib;
 using namespace utility;
 
-/*
-=========================================================================
- Basic Theory of Residual Networks
-=========================================================================
- The Residual Network is introduced to address the degradation problem of Deep Neural Networks.
-
- The theory of Residual Networks is based on the formula:
-	F(x) := H(x) - x
-     WHERE
-	F(x) = Residual Function
-	H(x) = Desired Mapping
-
- This theory hypothesize that it is easier to reach the desired mapping by calculating from the
- Residual Function than to try and stack it randomly.
-
- Therefore,
-	H(x) := F(x) + x
-=========================================================================
- The Architecture that will be used in this project
-=========================================================================
-
-=========================================================================
- ResNet 152
-=========================================================================
- [7x7, 64, stride 2     ]
- [3x3 max pool, stride 2]
-
- [Bottleneck 64, 256  ] x3
- [Bottleneck 128, 512 ] x8
- [Bottleneck 256, 1024] x36
- [Bottleneck 512, 2048] x3
-
- [average pool]
- [1000-d fc   ]
- [softmax     ]
-=========================================================================
-*/
-
 // First Layer
 template<
 	template <typename> class BN         ,
@@ -157,6 +119,9 @@ int main(int argc, char** argv) try{
 		return 1;
 	}
 
+	string root_dir(argv[1]);
+	string image_path_file(argv[2]);
+	string label_file(argv[3]);
 	auto listing = get_imagenet_listing(string(argv[1]), string(argv[2]), string(argv[3]));
 	cout << "No. of image in dataset: " << listing.size() << endl;
 	const auto number_of_classes = listing.back().get_numeric_label()+1;
@@ -174,7 +139,7 @@ int main(int argc, char** argv) try{
 	trainer.set_synchronization_file("./src/sync/ResNet152.dat", std::chrono::minutes(10));
 
 	trainer.set_iterations_without_progress_threshold(1000);
-	set_all_bn_running_stats_window_sizes(net, 50);
+	//set_all_bn_running_stats_window_sizes(net, 50);
 
 	std::vector<matrix<rgb_pixel>> samples;
 	std::vector<unsigned long>     labels;
@@ -183,7 +148,9 @@ int main(int argc, char** argv) try{
 	// random crops.
 	// This keeps the GPU busy.
 
-	dlib::pipe<std::pair<Image_info, matrix<rgb_pixel>>> data(200);
+	// SET MINIBATCH HERE
+	dlib::pipe<std::pair<Image_info, matrix<rgb_pixel>>> data(2);
+
 	// - Pipe is a FIFO queue with a fixed max size (specified on
 	//   creation) containing items of type T.
 	// - Suitable for passing objects between threads.
@@ -210,7 +177,8 @@ int main(int argc, char** argv) try{
 		labels.clear();
 
 		std::pair<Image_info, matrix<rgb_pixel>> img;
-		while(samples.size() < 160){
+		// SET MINIBATCH HERE
+		while(samples.size() < 2){
 			data.dequeue(img);
 
 			samples.push_back(std::move(img.second));
@@ -269,7 +237,7 @@ void process_image(string network_path, string ILSVRC_path, int argc){
 			cout << "Hit enter to process the next image";
 			cin.get();
 		}
-	}catch(std::exceptions& e){
+	}catch(std::exception& e){
 		cout << e.what() << endl;
 	}
 }
