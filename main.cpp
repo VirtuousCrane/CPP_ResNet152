@@ -42,8 +42,10 @@ using residual_block_not_activated =    add_prev1<
 					tag1<SUBNET>>
 					>>>>>>>>;
 
-template<int N, typename SUBNET> using relu_block  = relu<residual_block_not_activated<N, bn_con, relu, 1, SUBNET>>;
-template<int N, typename SUBNET> using prelu_block = prelu<residual_block_not_activated<N, bn_con, prelu, 1, SUBNET>>;
+//template<int N, typename SUBNET> using relu_block  = relu<residual_block_not_activated<N, bn_con, relu, 1, SUBNET>>;
+//template<int N, typename SUBNET> using prelu_block = prelu<residual_block_not_activated<N, bn_con, prelu, 1, SUBNET>>;
+template<int N, typename SUBNET> using relu_block  = relu<residual_block_not_activated<N, affine, relu, 1, SUBNET>>;
+template<int N, typename SUBNET> using prelu_block = prelu<residual_block_not_activated<N, affine, prelu, 1, SUBNET>>;
 
 template<typename SUBNET> using block_64  = relu_block<64 , SUBNET>;
 template<typename SUBNET> using block_128 = relu_block<128, SUBNET>;
@@ -80,8 +82,10 @@ using residual_downsampling_not_activated = 	add_prev1<
 						con<N, 1, 1, 1, 1, SUBNET>
 						>>>>>>>>>>;
 
-template<int N, typename SUBNET> using relu_downsampling  = relu<residual_downsampling_not_activated<N, bn_con, relu, SUBNET>>;
-template<int N, typename SUBNET> using prelu_downsampling = prelu<residual_downsampling_not_activated<N, bn_con, prelu, SUBNET>>;
+//template<int N, typename SUBNET> using relu_downsampling  = relu<residual_downsampling_not_activated<N, bn_con, relu, SUBNET>>;
+//template<int N, typename SUBNET> using prelu_downsampling = prelu<residual_downsampling_not_activated<N, bn_con, prelu, SUBNET>>;
+template<int N, typename SUBNET> using relu_downsampling  = relu<residual_downsampling_not_activated<N, affine, relu, SUBNET>>;
+template<int N, typename SUBNET> using prelu_downsampling = prelu<residual_downsampling_not_activated<N, affine, prelu, SUBNET>>;
 
 template<typename SUBNET> using downsampling_128 = relu_downsampling<128, SUBNET>;
 template<typename SUBNET> using downsampling_256 = relu_downsampling<256, SUBNET>;
