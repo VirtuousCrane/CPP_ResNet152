@@ -41,13 +41,19 @@ if __name__ == "__main__":
 	mapping = get_mapping();
 	resource_dict = process_lines(mapping);
 
-	f = open("train_test/key_file_15.txt", "w");
-	d = open("train_test/data_path_15.txt", "w");
+#	f = open("train_test/key_file_15.txt", "w");
+#	d = open("train_test/data_path_15.txt", "w");
+	f = open("train_test/val_file_15.txt", "w");
+	d = open("train_test/val_data_15.txt", "w");
 	for key in resource_dict.keys():
 		l = resource_dict[key];
-		for i in range(15):
-			if(len(l) != 0):
+		#for i in range(15):
+		#	if(len(l) != 0):
+		#		f.write(key + "\n");
+		#		d.write(l[i].split("/")[-1] + "\n");
+		if(len(l) != 0):
+			for data in l:
 				f.write(key + "\n");
-				d.write(l[i].split("/")[-1] + "\n");
+				d.write(data.split("/")[-1] + "\n");
 	f.close();
 	d.close();

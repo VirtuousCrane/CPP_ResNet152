@@ -117,14 +117,16 @@ namespace utility{
 		const string& image_path_file,
 		const string& label_file
 	){
+		std::cout << "Getting Imagenet Listing" << std::endl;
+
 		ifstream label(label_file)          ;
 		ifstream image_path(image_path_file);
 		string   label_line, path           ;
 		string   filename                   ;
-		string   previous_label             ;
+		string   previous_label = ""        ;
 
 		std::vector<Image_info> results;
-		long numeric_label = -1   ;
+		long numeric_label = -1        ;
 
 		while(getline(label, label_line) && getline(image_path, path)){
 			filename = root_directory + "/" + path;
@@ -132,7 +134,8 @@ namespace utility{
 				cout << "File: <"  << filename << "> does not exist." << endl;
 			}
 			if(label_line != previous_label){
-				++numeric_label;
+				++numeric_label            ;
+				previous_label = label_line;
 			}
 
 			Image_info temp(label_line, filename, numeric_label);
