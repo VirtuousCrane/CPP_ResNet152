@@ -43,8 +43,8 @@ if __name__ == "__main__":
 
 #	f = open("train_test/key_file_15.txt", "w");
 #	d = open("train_test/data_path_15.txt", "w");
-	f = open("train_test/val_file_15.txt", "w");
-	d = open("train_test/val_data_15.txt", "w");
+	f = open("train_test/ex_tiny_val_file_15.txt", "w");
+	d = open("train_test/ex_tiny_val_data_15.txt", "w");
 	for key in resource_dict.keys():
 		l = resource_dict[key];
 		#for i in range(15):
@@ -52,8 +52,10 @@ if __name__ == "__main__":
 		#		f.write(key + "\n");
 		#		d.write(l[i].split("/")[-1] + "\n");
 		if(len(l) != 0):
-			for data in l:
-				f.write(key + "\n");
-				d.write(data.split("/")[-1] + "\n");
+		#	for i in range(5):
+		#		f.write(key + "\n");
+		#		d.write(l[-i].split("/")[-1] + "\n");
+			f.write(key + "\n");
+			d.write(l[-1].split("/")[-1] + "\n");
 	f.close();
 	d.close();
