@@ -7,16 +7,15 @@ using namespace std;
 using namespace dlib;
 using namespace utility;
 
-const string BASE_PATH = "/content/drive/MyDrive/datasets/ILSVRC_2015/img";
-const string IMG_PATH  = "../src/train_test/data_path_15.txt"             ;
-const string LBL_PATH  = "../src/train_test/key_file_15.txt"              ;
+CIFAR_PATH = "/media/akagi/Zuikaku/datasets/CIFAR-10-binary";
 
-const string VAL_IMG_PATH = "../src/train_test/ex_tiny_val_data_15.txt";
-const string VAL_LBL_PATH = "../src/train_test/ex_tiny_val_file_15.txt";
+// ======================================================================
+//  Defining the Network
+// ======================================================================
 
 // First Layer
 template<
-	template <typename> class BN         ,
+	template <typename> class BN        ,
 	template <typename> class ACTIVATION,
 	typename SUBNET
 	>
@@ -158,7 +157,6 @@ using test_net_type = loss_multiclass_log<
 			>>>>>>>>>>>>>;
 
 // ======================================================================
-void process_image(string network_path, string ILSVRC_path, int argc);
 int main(int argc, char** argv) try{
 
 	auto listing = get_imagenet_listing(BASE_PATH, IMG_PATH, LBL_PATH);
@@ -185,10 +183,6 @@ int main(int argc, char** argv) try{
 	std::vector<matrix<rgb_pixel>> samples;
 	std::vector<unsigned long>     labels;
 
-	// Start threads that read images from disk and pull out
-	// random crops.
-	// This keeps the GPU busy.
-
 	// SET MINIBATCH HERE
 	dlib::pipe<std::pair<Image_info, matrix<rgb_pixel>>> data(2);
 
@@ -197,58 +191,32 @@ int main(int argc, char** argv) try{
 	// - Suitable for passing objects between threads.
 	// - Is Thread Safe
 
-	auto f = [&data, &listing](time_t seed){
-		dlib::rand rnd(time(0)+seed);
-		matrix<rgb_pixel> img;
-		std::pair<utility::Image_info, matrix<rgb_pixel>> temp;
-		while(data.is_enabled()){
-			temp.first = listing[rnd.get_random_32bit_number() % listing.size()];
-			load_image(img, temp.first.get_filename());
-			utility::randomly_crop_image(img, temp.second, rnd);
-			data.enqueue(temp);
-		}
-	};
-
-//	std::thread data_loader1([f](){ f(1); });
-//	std::thread data_loader2([f](){ f(2); });
-//	std::thread data_loader3([f](){ f(3); });
-//	std::thread data_loader4([f](){ f(4); });
-
 	dlib::rand rnd(time(0));
 	while(trainer.get_learning_rate() >= initial_learning_rate * 1e-3){
 		samples.clear();
 		labels.clear();
 
-//		std::pair<Image_info, matrix<rgb_pixel>> img;
 		// SET MINIBATCH HERE
 		while(samples.size() < 2){
 			matrix<rgb_pixel> img                                                    ;
 			Image_info temp = listing[rnd.get_random_32bit_number() % listing.size()];
-      while(true){
-        try{
-			    load_image(img, temp.get_filename())                                     ;
-          break;
-        }catch(...){
-          continue;
-        }
-      }
-			utility::randomly_crop_image(img, img, rnd);
-//			data.dequeue(img);
 
-//			samples.push_back(std::move(img.second));
-//			labels.push_back(img.first.get_numeric_label());
+			while(true){
+				try{
+					load_image(img, temp.get_filename())                                     ;
+					break;
+				}catch(...){
+					continue;
+				}
+			}
+			utility::randomly_crop_image(img, img, rnd);
+
 			samples.push_back(img);
 			labels.push_back(temp.get_numeric_label());
 		}
 
 		trainer.train_one_step(samples, labels);
 	}
-
-//	data.disable();
-//	data_loader1.join();
-//	data_loader2.join();
-//	data_loader3.join();
-//	data_loader4.join();
 
 	trainer.get_net();
 	cout << "Saving Network" << endl;
@@ -257,11 +225,7 @@ int main(int argc, char** argv) try{
 // ===========================================================================
 //  Testing The Neural Network
 // ===========================================================================
-/*
-  set_dnn_prefer_smallest_algorithms();
-
-  dlib::rand rnd(time(0));
-  net_type net;
+	net_type net;
 	deserialize("../src/ResNet152.dnn") >> net;
 	softmax<test_net_type::subnet_type> snet;
 	snet.subnet() = net.subnet()       ;
@@ -273,33 +237,33 @@ int main(int argc, char** argv) try{
 	int num_right_top1 = 0;
 	int num_wrong_top1 = 0;
 
-  auto val_listing = get_imagenet_listing(BASE_PATH, VAL_IMG_PATH, VAL_LBL_PATH);
-  cout << "No. of image in dataset: " << val_listing.size()                       << endl;
+	auto val_listing = get_imagenet_listing(BASE_PATH, VAL_IMG_PATH, VAL_LBL_PATH);
+	cout << "No. of image in dataset: " << val_listing.size()                       << endl;
 	cout << "No. of classes: "          << val_listing.back().get_numeric_label()+1 << endl;
 
 	for(auto l: val_listing){
 		dlib::array<matrix<rgb_pixel>> images;
 		matrix<rgb_pixel>              img   ;
 
-    while(true){
-      try{
-		    load_image(img, l.get_filename());
-        break;
-      }catch (...){
-        continue;
-      }
-    }
+		while(true){
+			try{
+				load_image(img, l.get_filename());
+				break;
+			}catch (...){
+        		continue;
+			}
+		}
 
-    cout << "Loaded Images" << endl;
+		cout << "Loaded Images" << endl;
 
 		const int num_crops = 4;
 		randomly_crop_images(img, images, rnd, num_crops);
 
-    cout << "Cropped Images" << endl;
+		cout << "Cropped Images" << endl;
 
 		matrix<float, 1, 1000> p = sum_rows(mat(snet(images.begin(), images.end())))/num_crops;
 
-    cout << "Generated Predictions" << endl;
+		cout << "Generated Predictions" << endl;
 
 		// Top-1
 		if(index_of_max(p) == l.get_numeric_label()){
@@ -332,43 +296,3 @@ int main(int argc, char** argv) try{
 	cout << e.what() << endl;
 }
 
-void process_image(string network_path, string ILSVRC_path, int argc){
-	try{
-		std::vector<string> labels;
-		net_type net;
-		deserialize(network_path) >> net >> labels;
-
-		// Make the last layer of the network be softmax
-		softmax<net_type::subnet_type> snet;
-		snet.subnet() = net.subnet()        ;
-
-		dlib::array<matrix<rgb_pixel>> images;
-		matrix<rgb_pixel> img, crop          ;
-
-		dlib::rand rnd  ;
-		image_window win;
-
-		for(int i=0; i<argc; ++i){
-			load_image(img, ILSVRC_path);
-			const int num_crops = 16;
-
-			randomly_crop_images(img, images, rnd, num_crops);
-
-			matrix<float, 1, 1000> p = sum_rows(mat(snet(images.begin(), images.end())))/num_crops;
-
-			win.set_image(img);
-
-			// Getting the top-5 probabilities
-			for(int k=0; k<5; ++k){
-				unsigned long predicted_label = index_of_max(p);
-				cout << p(predicted_label) << ": " << labels[predicted_label] << endl;
-				p(predicted_label) = 0;
-			}
-
-			cout << "Hit enter to process the next image";
-			cin.get();
-		}
-	}catch(std::exception& e){
-		cout << e.what() << endl;
-	}
-}
