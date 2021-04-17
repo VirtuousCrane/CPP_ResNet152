@@ -260,6 +260,87 @@ bsp/bsp.cpp.s:
 	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/bsp/bsp.cpp.s
 .PHONY : bsp/bsp.cpp.s
 
+cuda/cpu_dlib.o: cuda/cpu_dlib.cpp.o
+
+.PHONY : cuda/cpu_dlib.o
+
+# target to build an object file
+cuda/cpu_dlib.cpp.o:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/cuda/cpu_dlib.cpp.o
+.PHONY : cuda/cpu_dlib.cpp.o
+
+cuda/cpu_dlib.i: cuda/cpu_dlib.cpp.i
+
+.PHONY : cuda/cpu_dlib.i
+
+# target to preprocess a source file
+cuda/cpu_dlib.cpp.i:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/cuda/cpu_dlib.cpp.i
+.PHONY : cuda/cpu_dlib.cpp.i
+
+cuda/cpu_dlib.s: cuda/cpu_dlib.cpp.s
+
+.PHONY : cuda/cpu_dlib.s
+
+# target to generate assembly for a file
+cuda/cpu_dlib.cpp.s:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/cuda/cpu_dlib.cpp.s
+.PHONY : cuda/cpu_dlib.cpp.s
+
+cuda/tensor_tools.o: cuda/tensor_tools.cpp.o
+
+.PHONY : cuda/tensor_tools.o
+
+# target to build an object file
+cuda/tensor_tools.cpp.o:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/cuda/tensor_tools.cpp.o
+.PHONY : cuda/tensor_tools.cpp.o
+
+cuda/tensor_tools.i: cuda/tensor_tools.cpp.i
+
+.PHONY : cuda/tensor_tools.i
+
+# target to preprocess a source file
+cuda/tensor_tools.cpp.i:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/cuda/tensor_tools.cpp.i
+.PHONY : cuda/tensor_tools.cpp.i
+
+cuda/tensor_tools.s: cuda/tensor_tools.cpp.s
+
+.PHONY : cuda/tensor_tools.s
+
+# target to generate assembly for a file
+cuda/tensor_tools.cpp.s:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/cuda/tensor_tools.cpp.s
+.PHONY : cuda/tensor_tools.cpp.s
+
+data_io/cifar.o: data_io/cifar.cpp.o
+
+.PHONY : data_io/cifar.o
+
+# target to build an object file
+data_io/cifar.cpp.o:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/data_io/cifar.cpp.o
+.PHONY : data_io/cifar.cpp.o
+
+data_io/cifar.i: data_io/cifar.cpp.i
+
+.PHONY : data_io/cifar.i
+
+# target to preprocess a source file
+data_io/cifar.cpp.i:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/data_io/cifar.cpp.i
+.PHONY : data_io/cifar.cpp.i
+
+data_io/cifar.s: data_io/cifar.cpp.s
+
+.PHONY : data_io/cifar.s
+
+# target to generate assembly for a file
+data_io/cifar.cpp.s:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/data_io/cifar.cpp.s
+.PHONY : data_io/cifar.cpp.s
+
 data_io/image_dataset_metadata.o: data_io/image_dataset_metadata.cpp.o
 
 .PHONY : data_io/image_dataset_metadata.o
@@ -395,60 +476,6 @@ dir_nav/dir_nav_kernel_2.cpp.s:
 	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/dir_nav/dir_nav_kernel_2.cpp.s
 .PHONY : dir_nav/dir_nav_kernel_2.cpp.s
 
-dnn/cpu_dlib.o: dnn/cpu_dlib.cpp.o
-
-.PHONY : dnn/cpu_dlib.o
-
-# target to build an object file
-dnn/cpu_dlib.cpp.o:
-	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/dnn/cpu_dlib.cpp.o
-.PHONY : dnn/cpu_dlib.cpp.o
-
-dnn/cpu_dlib.i: dnn/cpu_dlib.cpp.i
-
-.PHONY : dnn/cpu_dlib.i
-
-# target to preprocess a source file
-dnn/cpu_dlib.cpp.i:
-	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/dnn/cpu_dlib.cpp.i
-.PHONY : dnn/cpu_dlib.cpp.i
-
-dnn/cpu_dlib.s: dnn/cpu_dlib.cpp.s
-
-.PHONY : dnn/cpu_dlib.s
-
-# target to generate assembly for a file
-dnn/cpu_dlib.cpp.s:
-	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/dnn/cpu_dlib.cpp.s
-.PHONY : dnn/cpu_dlib.cpp.s
-
-dnn/tensor_tools.o: dnn/tensor_tools.cpp.o
-
-.PHONY : dnn/tensor_tools.o
-
-# target to build an object file
-dnn/tensor_tools.cpp.o:
-	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/dnn/tensor_tools.cpp.o
-.PHONY : dnn/tensor_tools.cpp.o
-
-dnn/tensor_tools.i: dnn/tensor_tools.cpp.i
-
-.PHONY : dnn/tensor_tools.i
-
-# target to preprocess a source file
-dnn/tensor_tools.cpp.i:
-	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/dnn/tensor_tools.cpp.i
-.PHONY : dnn/tensor_tools.cpp.i
-
-dnn/tensor_tools.s: dnn/tensor_tools.cpp.s
-
-.PHONY : dnn/tensor_tools.s
-
-# target to generate assembly for a file
-dnn/tensor_tools.cpp.s:
-	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/dnn/tensor_tools.cpp.s
-.PHONY : dnn/tensor_tools.cpp.s
-
 entropy_decoder/entropy_decoder_kernel_1.o: entropy_decoder/entropy_decoder_kernel_1.cpp.o
 
 .PHONY : entropy_decoder/entropy_decoder_kernel_1.o
@@ -556,6 +583,60 @@ entropy_encoder/entropy_encoder_kernel_2.s: entropy_encoder/entropy_encoder_kern
 entropy_encoder/entropy_encoder_kernel_2.cpp.s:
 	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/entropy_encoder/entropy_encoder_kernel_2.cpp.s
 .PHONY : entropy_encoder/entropy_encoder_kernel_2.cpp.s
+
+filtering/kalman_filter.o: filtering/kalman_filter.cpp.o
+
+.PHONY : filtering/kalman_filter.o
+
+# target to build an object file
+filtering/kalman_filter.cpp.o:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/filtering/kalman_filter.cpp.o
+.PHONY : filtering/kalman_filter.cpp.o
+
+filtering/kalman_filter.i: filtering/kalman_filter.cpp.i
+
+.PHONY : filtering/kalman_filter.i
+
+# target to preprocess a source file
+filtering/kalman_filter.cpp.i:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/filtering/kalman_filter.cpp.i
+.PHONY : filtering/kalman_filter.cpp.i
+
+filtering/kalman_filter.s: filtering/kalman_filter.cpp.s
+
+.PHONY : filtering/kalman_filter.s
+
+# target to generate assembly for a file
+filtering/kalman_filter.cpp.s:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/filtering/kalman_filter.cpp.s
+.PHONY : filtering/kalman_filter.cpp.s
+
+global_optimization/global_function_search.o: global_optimization/global_function_search.cpp.o
+
+.PHONY : global_optimization/global_function_search.o
+
+# target to build an object file
+global_optimization/global_function_search.cpp.o:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/global_optimization/global_function_search.cpp.o
+.PHONY : global_optimization/global_function_search.cpp.o
+
+global_optimization/global_function_search.i: global_optimization/global_function_search.cpp.i
+
+.PHONY : global_optimization/global_function_search.i
+
+# target to preprocess a source file
+global_optimization/global_function_search.cpp.i:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/global_optimization/global_function_search.cpp.i
+.PHONY : global_optimization/global_function_search.cpp.i
+
+global_optimization/global_function_search.s: global_optimization/global_function_search.cpp.s
+
+.PHONY : global_optimization/global_function_search.s
+
+# target to generate assembly for a file
+global_optimization/global_function_search.cpp.s:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/global_optimization/global_function_search.cpp.s
+.PHONY : global_optimization/global_function_search.cpp.s
 
 gui_core/gui_core_kernel_1.o: gui_core/gui_core_kernel_1.cpp.o
 
@@ -1313,6 +1394,60 @@ stack_trace.cpp.s:
 	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/stack_trace.cpp.s
 .PHONY : stack_trace.cpp.s
 
+svm/auto.o: svm/auto.cpp.o
+
+.PHONY : svm/auto.o
+
+# target to build an object file
+svm/auto.cpp.o:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/svm/auto.cpp.o
+.PHONY : svm/auto.cpp.o
+
+svm/auto.i: svm/auto.cpp.i
+
+.PHONY : svm/auto.i
+
+# target to preprocess a source file
+svm/auto.cpp.i:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/svm/auto.cpp.i
+.PHONY : svm/auto.cpp.i
+
+svm/auto.s: svm/auto.cpp.s
+
+.PHONY : svm/auto.s
+
+# target to generate assembly for a file
+svm/auto.cpp.s:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/svm/auto.cpp.s
+.PHONY : svm/auto.cpp.s
+
+test_for_odr_violations.o: test_for_odr_violations.cpp.o
+
+.PHONY : test_for_odr_violations.o
+
+# target to build an object file
+test_for_odr_violations.cpp.o:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/test_for_odr_violations.cpp.o
+.PHONY : test_for_odr_violations.cpp.o
+
+test_for_odr_violations.i: test_for_odr_violations.cpp.i
+
+.PHONY : test_for_odr_violations.i
+
+# target to preprocess a source file
+test_for_odr_violations.cpp.i:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/test_for_odr_violations.cpp.i
+.PHONY : test_for_odr_violations.cpp.i
+
+test_for_odr_violations.s: test_for_odr_violations.cpp.s
+
+.PHONY : test_for_odr_violations.s
+
+# target to generate assembly for a file
+test_for_odr_violations.cpp.s:
+	cd /home/akagi/Documents/dlibTest/project/build && $(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/test_for_odr_violations.cpp.s
+.PHONY : test_for_odr_violations.cpp.s
+
 threads/async.o: threads/async.cpp.o
 
 .PHONY : threads/async.o
@@ -1607,6 +1742,15 @@ help:
 	@echo "... bsp/bsp.o"
 	@echo "... bsp/bsp.i"
 	@echo "... bsp/bsp.s"
+	@echo "... cuda/cpu_dlib.o"
+	@echo "... cuda/cpu_dlib.i"
+	@echo "... cuda/cpu_dlib.s"
+	@echo "... cuda/tensor_tools.o"
+	@echo "... cuda/tensor_tools.i"
+	@echo "... cuda/tensor_tools.s"
+	@echo "... data_io/cifar.o"
+	@echo "... data_io/cifar.i"
+	@echo "... data_io/cifar.s"
 	@echo "... data_io/image_dataset_metadata.o"
 	@echo "... data_io/image_dataset_metadata.i"
 	@echo "... data_io/image_dataset_metadata.s"
@@ -1622,12 +1766,6 @@ help:
 	@echo "... dir_nav/dir_nav_kernel_2.o"
 	@echo "... dir_nav/dir_nav_kernel_2.i"
 	@echo "... dir_nav/dir_nav_kernel_2.s"
-	@echo "... dnn/cpu_dlib.o"
-	@echo "... dnn/cpu_dlib.i"
-	@echo "... dnn/cpu_dlib.s"
-	@echo "... dnn/tensor_tools.o"
-	@echo "... dnn/tensor_tools.i"
-	@echo "... dnn/tensor_tools.s"
 	@echo "... entropy_decoder/entropy_decoder_kernel_1.o"
 	@echo "... entropy_decoder/entropy_decoder_kernel_1.i"
 	@echo "... entropy_decoder/entropy_decoder_kernel_1.s"
@@ -1640,6 +1778,12 @@ help:
 	@echo "... entropy_encoder/entropy_encoder_kernel_2.o"
 	@echo "... entropy_encoder/entropy_encoder_kernel_2.i"
 	@echo "... entropy_encoder/entropy_encoder_kernel_2.s"
+	@echo "... filtering/kalman_filter.o"
+	@echo "... filtering/kalman_filter.i"
+	@echo "... filtering/kalman_filter.s"
+	@echo "... global_optimization/global_function_search.o"
+	@echo "... global_optimization/global_function_search.i"
+	@echo "... global_optimization/global_function_search.s"
 	@echo "... gui_core/gui_core_kernel_1.o"
 	@echo "... gui_core/gui_core_kernel_1.i"
 	@echo "... gui_core/gui_core_kernel_1.s"
@@ -1724,6 +1868,12 @@ help:
 	@echo "... stack_trace.o"
 	@echo "... stack_trace.i"
 	@echo "... stack_trace.s"
+	@echo "... svm/auto.o"
+	@echo "... svm/auto.i"
+	@echo "... svm/auto.s"
+	@echo "... test_for_odr_violations.o"
+	@echo "... test_for_odr_violations.i"
+	@echo "... test_for_odr_violations.s"
 	@echo "... threads/async.o"
 	@echo "... threads/async.i"
 	@echo "... threads/async.s"
