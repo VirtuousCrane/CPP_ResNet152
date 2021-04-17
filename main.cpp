@@ -11,8 +11,8 @@ const string BASE_PATH = "/content/drive/MyDrive/datasets/ILSVRC_2015/img";
 const string IMG_PATH  = "../src/train_test/data_path_15.txt"             ;
 const string LBL_PATH  = "../src/train_test/key_file_15.txt"              ;
 
-const string VAL_IMG_PATH = "../src/train_test/val_data_15.txt";
-const string VAL_LBL_PATH = "../src/train_test/val_file_15.txt";
+const string VAL_IMG_PATH = "../src/train_test/ex_tiny_val_data_15.txt";
+const string VAL_LBL_PATH = "../src/train_test/ex_tiny_val_file_15.txt";
 
 // First Layer
 template<
@@ -23,6 +23,8 @@ template<
 using custom_ResNet_input_layer = ACTIVATION<BN<con<64, 7, 7, 2, 2, SUBNET>>>;
 
 template<typename SUBNET> using relu_input_layer = custom_ResNet_input_layer<bn_con, relu, SUBNET>;
+template<typename SUBNET> using arelu_input_layer = custom_ResNet_input_layer<affine, relu, SUBNET>;
+
 
 // First Layer Pool
 template<typename SUBNET> using input_pooling = max_pool<3, 3, 2, 2, SUBNET>;
@@ -51,13 +53,18 @@ using residual_block_not_activated =    add_prev1<
 
 template<int N, typename SUBNET> using relu_block  = relu<residual_block_not_activated<N, bn_con, relu, 1, SUBNET>>;
 template<int N, typename SUBNET> using prelu_block = prelu<residual_block_not_activated<N, bn_con, prelu, 1, SUBNET>>;
-//template<int N, typename SUBNET> using relu_block  = relu<residual_block_not_activated<N, affine, relu, 1, SUBNET>>;
-//template<int N, typename SUBNET> using prelu_block = prelu<residual_block_not_activated<N, affine, prelu, 1, SUBNET>>;
+template<int N, typename SUBNET> using arelu_block  = relu<residual_block_not_activated<N, affine, relu, 1, SUBNET>>;
+template<int N, typename SUBNET> using aprelu_block = prelu<residual_block_not_activated<N, affine, prelu, 1, SUBNET>>;
 
 template<typename SUBNET> using block_64  = relu_block<64 , SUBNET>;
 template<typename SUBNET> using block_128 = relu_block<128, SUBNET>;
 template<typename SUBNET> using block_256 = relu_block<256, SUBNET>;
 template<typename SUBNET> using block_512 = relu_block<512, SUBNET>;
+
+template<typename SUBNET> using ablock_64  = arelu_block<64 , SUBNET>;
+template<typename SUBNET> using ablock_128 = arelu_block<128, SUBNET>;
+template<typename SUBNET> using ablock_256 = arelu_block<256, SUBNET>;
+template<typename SUBNET> using ablock_512 = arelu_block<512, SUBNET>;
 
 // Resnet building block for downsampling
 /*
@@ -91,12 +98,16 @@ using residual_downsampling_not_activated = 	add_prev1<
 
 template<int N, typename SUBNET> using relu_downsampling  = relu<residual_downsampling_not_activated<N, bn_con, relu, SUBNET>>;
 template<int N, typename SUBNET> using prelu_downsampling = prelu<residual_downsampling_not_activated<N, bn_con, prelu, SUBNET>>;
-//template<int N, typename SUBNET> using relu_downsampling  = relu<residual_downsampling_not_activated<N, affine, relu, SUBNET>>;
-//template<int N, typename SUBNET> using prelu_downsampling = prelu<residual_downsampling_not_activated<N, affine, prelu, SUBNET>>;
+template<int N, typename SUBNET> using arelu_downsampling  = relu<residual_downsampling_not_activated<N, affine, relu, SUBNET>>;
+template<int N, typename SUBNET> using aprelu_downsampling = prelu<residual_downsampling_not_activated<N, affine, prelu, SUBNET>>;
 
 template<typename SUBNET> using downsampling_128 = relu_downsampling<128, SUBNET>;
 template<typename SUBNET> using downsampling_256 = relu_downsampling<256, SUBNET>;
 template<typename SUBNET> using downsampling_512 = relu_downsampling<512, SUBNET>;
+
+template<typename SUBNET> using adownsampling_128 = arelu_downsampling<128, SUBNET>;
+template<typename SUBNET> using adownsampling_256 = arelu_downsampling<256, SUBNET>;
+template<typename SUBNET> using adownsampling_512 = arelu_downsampling<512, SUBNET>;
 
 using net_type = loss_multiclass_log<
 			fc<1000,
@@ -119,12 +130,37 @@ using net_type = loss_multiclass_log<
 
 			input_pooling<
 			relu_input_layer<
-			input_rgb_image_sized<227>
+			input_rgb_image_sized<224>
+			>>>>>>>>>>>>>;
+
+using test_net_type = loss_multiclass_log<
+			fc<1000,
+			avg_pool_everything<
+
+			ablock_512<
+			ablock_512<
+			adownsampling_512<
+
+			repeat<35,
+			ablock_256,
+			adownsampling_256<
+
+			repeat<7,
+			ablock_128,
+			adownsampling_128<
+
+			repeat<3,
+			ablock_64,
+
+			input_pooling<
+			arelu_input_layer<
+			input_rgb_image_sized<224>
 			>>>>>>>>>>>>>;
 
 // ======================================================================
 void process_image(string network_path, string ILSVRC_path, int argc);
 int main(int argc, char** argv) try{
+
 	auto listing = get_imagenet_listing(BASE_PATH, IMG_PATH, LBL_PATH);
 	const auto number_of_classes = listing.back().get_numeric_label()+1;
 
@@ -141,10 +177,10 @@ int main(int argc, char** argv) try{
 	dnn_trainer<net_type> trainer(net, sgd(weight_decay, momentum));
 	trainer.be_verbose();
 	trainer.set_learning_rate(initial_learning_rate);
-	trainer.set_synchronization_file("../src/sync/ResNet152.dat", std::chrono::minutes(1));
+	trainer.set_synchronization_file("../src/sync/ResNet152_224x224_10000.dat", std::chrono::minutes(1));
 
-	trainer.set_iterations_without_progress_threshold(1000);
-	//set_all_bn_running_stats_window_sizes(net, 50);
+	trainer.set_iterations_without_progress_threshold(20000);
+	set_all_bn_running_stats_window_sizes(net, 1000);
 
 	std::vector<matrix<rgb_pixel>> samples;
 	std::vector<unsigned long>     labels;
@@ -152,7 +188,7 @@ int main(int argc, char** argv) try{
 	// Start threads that read images from disk and pull out
 	// random crops.
 	// This keeps the GPU busy.
-/*
+
 	// SET MINIBATCH HERE
 	dlib::pipe<std::pair<Image_info, matrix<rgb_pixel>>> data(2);
 
@@ -172,7 +208,7 @@ int main(int argc, char** argv) try{
 			data.enqueue(temp);
 		}
 	};
-*/
+
 //	std::thread data_loader1([f](){ f(1); });
 //	std::thread data_loader2([f](){ f(2); });
 //	std::thread data_loader3([f](){ f(3); });
@@ -188,7 +224,14 @@ int main(int argc, char** argv) try{
 		while(samples.size() < 2){
 			matrix<rgb_pixel> img                                                    ;
 			Image_info temp = listing[rnd.get_random_32bit_number() % listing.size()];
-			load_image(img, temp.get_filename())                                     ;
+      while(true){
+        try{
+			    load_image(img, temp.get_filename())                                     ;
+          break;
+        }catch(...){
+          continue;
+        }
+      }
 			utility::randomly_crop_image(img, img, rnd);
 //			data.dequeue(img);
 
@@ -209,14 +252,18 @@ int main(int argc, char** argv) try{
 
 	trainer.get_net();
 	cout << "Saving Network" << endl;
-	serialize("../src/ResNet152.dnn") << net;
+	serialize("../src/ResNet152_224x224_10000.dnn") << net;
 
 // ===========================================================================
 //  Testing The Neural Network
 // ===========================================================================
+/*
+  set_dnn_prefer_smallest_algorithms();
 
-	net << deserialize("../src/ResNet152.dnn");
-	softmax<net_type::subnet_type> snet;
+  dlib::rand rnd(time(0));
+  net_type net;
+	deserialize("../src/ResNet152.dnn") >> net;
+	softmax<test_net_type::subnet_type> snet;
 	snet.subnet() = net.subnet()       ;
 
 	cout << "Testing the NN" << endl;
@@ -226,15 +273,33 @@ int main(int argc, char** argv) try{
 	int num_right_top1 = 0;
 	int num_wrong_top1 = 0;
 
-	for(auto l:get_imagenet_listing(BASE_PATH, VAL_IMG_PATH, VAL_LBL_PATH)){
+  auto val_listing = get_imagenet_listing(BASE_PATH, VAL_IMG_PATH, VAL_LBL_PATH);
+  cout << "No. of image in dataset: " << val_listing.size()                       << endl;
+	cout << "No. of classes: "          << val_listing.back().get_numeric_label()+1 << endl;
+
+	for(auto l: val_listing){
 		dlib::array<matrix<rgb_pixel>> images;
 		matrix<rgb_pixel>              img   ;
 
-		load_image(img, l.get_filename());
+    while(true){
+      try{
+		    load_image(img, l.get_filename());
+        break;
+      }catch (...){
+        continue;
+      }
+    }
 
-		const int num_crops = 16;
+    cout << "Loaded Images" << endl;
+
+		const int num_crops = 4;
 		randomly_crop_images(img, images, rnd, num_crops);
+
+    cout << "Cropped Images" << endl;
+
 		matrix<float, 1, 1000> p = sum_rows(mat(snet(images.begin(), images.end())))/num_crops;
+
+    cout << "Generated Predictions" << endl;
 
 		// Top-1
 		if(index_of_max(p) == l.get_numeric_label()){
@@ -262,7 +327,7 @@ int main(int argc, char** argv) try{
 
 	cout << "Top-5 acc: " << num_right/(double)(num_right+num_wrong)                << endl;
 	cout << "Top-1 acc: " << num_right_top1/(double)(num_right_top1+num_wrong_top1) << endl;
-
+*/
 } catch(std::exception& e){
 	cout << e.what() << endl;
 }
