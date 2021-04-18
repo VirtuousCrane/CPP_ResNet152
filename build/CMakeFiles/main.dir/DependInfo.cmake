@@ -12,7 +12,7 @@ set(CMAKE_CXX_COMPILER_ID "GNU")
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../include"
-  "/home/akagi/dlib-19.6/dlib/.."
+  "/home/akagi/dlib-19.22/dlib/.."
   )
 
 # Targets to which this target links.

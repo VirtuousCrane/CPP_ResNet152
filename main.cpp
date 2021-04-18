@@ -7,7 +7,17 @@ using namespace std;
 using namespace dlib;
 using namespace utility;
 
-CIFAR_PATH = "/media/akagi/Zuikaku/datasets/CIFAR-10-binary";
+unsigned int const MINIBATCH_SIZE = 64;
+
+// TODO
+string const ROOT_DIR = "/content/drive/MyDrive/datasets/ILSVRC_2015/img";
+string const IMG_FILE = "../src/train_test/ILSVRC_10.txt"                ;
+string const LBL_FILE = "../src/train_test/LBL_ILSVRC_10.txt"            ;
+
+string const TRAINING_IMAGE_PATH = "";
+string const TRAINING_LABEL_PATH = "";
+string const TESTING_IMAGE_PATH  = "";
+string const TESTING_LABEL_PATH  = "";
 
 // ======================================================================
 //  Defining the Network
@@ -156,16 +166,36 @@ using test_net_type = loss_multiclass_log<
 			input_rgb_image_sized<224>
 			>>>>>>>>>>>>>;
 
-// ======================================================================
 int main(int argc, char** argv) try{
+// =======================================================================
+//  Loading The Dataset
+// =======================================================================
+	std::vector<matrix<rgb_pixel>> training_images, testing_images;
+	std::vector<unsigned long>     training_labels, testing_labels;
 
-	auto listing = get_imagenet_listing(BASE_PATH, IMG_PATH, LBL_PATH);
-	const auto number_of_classes = listing.back().get_numeric_label()+1;
+	utility::get_imagenet_dataset(
+				TRAINING_IMAGE_PATH,
+				TRAINING_LABEL_PATH,
+				training_images    ,
+				training_labels
+				);
+	utility::get_imagenet_dataset(
+				TESTING_IMAGE_PATH,
+				TESTING_LABEL_PATH,
+				testing_images    ,
+				testing_labels
+				);
 
-	cout << "No. of image in dataset: " << listing.size()    << endl;
-	cout << "No. of classes: "          << number_of_classes << endl;
+	const auto number_of_classes = training_labels.back()+1;
+
+	cout << "No. of image in dataset: " << training_images.size()    << endl;
+	cout << "No. of classes: "          << number_of_classes         << endl;
 
 	set_dnn_prefer_smallest_algorithms();
+
+// =======================================================================
+//  Configuring the Neural Network
+// =======================================================================
 
 	const double initial_learning_rate = 0.1   ;
 	const double weight_decay          = 0.0001;
@@ -175,21 +205,16 @@ int main(int argc, char** argv) try{
 	dnn_trainer<net_type> trainer(net, sgd(weight_decay, momentum));
 	trainer.be_verbose();
 	trainer.set_learning_rate(initial_learning_rate);
-	trainer.set_synchronization_file("../src/sync/ResNet152_224x224_10000.dat", std::chrono::minutes(1));
+	trainer.set_synchronization_file("../src/sync/ResNet152_ImageNet10.dat", std::chrono::minutes(1));
 
-	trainer.set_iterations_without_progress_threshold(20000);
-	set_all_bn_running_stats_window_sizes(net, 1000);
+	trainer.set_iterations_without_progress_threshold(10000);
+
+// =======================================================================
+//  Training The Neural Network
+// =======================================================================
 
 	std::vector<matrix<rgb_pixel>> samples;
 	std::vector<unsigned long>     labels;
-
-	// SET MINIBATCH HERE
-	dlib::pipe<std::pair<Image_info, matrix<rgb_pixel>>> data(2);
-
-	// - Pipe is a FIFO queue with a fixed max size (specified on
-	//   creation) containing items of type T.
-	// - Suitable for passing objects between threads.
-	// - Is Thread Safe
 
 	dlib::rand rnd(time(0));
 	while(trainer.get_learning_rate() >= initial_learning_rate * 1e-3){
@@ -197,22 +222,10 @@ int main(int argc, char** argv) try{
 		labels.clear();
 
 		// SET MINIBATCH HERE
-		while(samples.size() < 2){
-			matrix<rgb_pixel> img                                                    ;
-			Image_info temp = listing[rnd.get_random_32bit_number() % listing.size()];
-
-			while(true){
-				try{
-					load_image(img, temp.get_filename())                                     ;
-					break;
-				}catch(...){
-					continue;
-				}
-			}
-			utility::randomly_crop_image(img, img, rnd);
-
-			samples.push_back(img);
-			labels.push_back(temp.get_numeric_label());
+		while(samples.size() < MINIBATCH_SIZE){
+			auto index = rnd.get_random_32bit_number() % training_images.size();
+			samples.push_back(training_images[index]);
+			labels.push_back(training_labels[index]);
 		}
 
 		trainer.train_one_step(samples, labels);
@@ -220,78 +233,43 @@ int main(int argc, char** argv) try{
 
 	trainer.get_net();
 	cout << "Saving Network" << endl;
-	serialize("../src/ResNet152_224x224_10000.dnn") << net;
+	serialize("../src/ResNet152_ImageNet10.dnn") << net;
 
 // ===========================================================================
 //  Testing The Neural Network
 // ===========================================================================
-	net_type net;
-	deserialize("../src/ResNet152.dnn") >> net;
+	deserialize("../src/ResNet152_ImageNet10.dnn") >> net;
 	softmax<test_net_type::subnet_type> snet;
 	snet.subnet() = net.subnet()       ;
 
 	cout << "Testing the NN" << endl;
 
-	int num_right = 0     ;
-	int num_wrong = 0     ;
-	int num_right_top1 = 0;
-	int num_wrong_top1 = 0;
+	int training_num_right = 0;
+	int training_num_wrong = 0;
+	int testing_num_right  = 0;
+	int testing_num_wrong  = 0;
 
-	auto val_listing = get_imagenet_listing(BASE_PATH, VAL_IMG_PATH, VAL_LBL_PATH);
-	cout << "No. of image in dataset: " << val_listing.size()                       << endl;
-	cout << "No. of classes: "          << val_listing.back().get_numeric_label()+1 << endl;
-
-	for(auto l: val_listing){
-		dlib::array<matrix<rgb_pixel>> images;
-		matrix<rgb_pixel>              img   ;
-
-		while(true){
-			try{
-				load_image(img, l.get_filename());
-				break;
-			}catch (...){
-        		continue;
-			}
-		}
-
-		cout << "Loaded Images" << endl;
-
-		const int num_crops = 4;
-		randomly_crop_images(img, images, rnd, num_crops);
-
-		cout << "Cropped Images" << endl;
-
-		matrix<float, 1, 1000> p = sum_rows(mat(snet(images.begin(), images.end())))/num_crops;
-
-		cout << "Generated Predictions" << endl;
-
-		// Top-1
-		if(index_of_max(p) == l.get_numeric_label()){
-			++num_right_top1;
+	for(int i=0; i<training_images.size(); i++){
+		matrix<float, 1, 10> p = sum_rows(mat(snet(training_images[i])));
+		if(index_of_max(p) == training_labels[i]){
+			++training_num_right;
 		}else{
-			++num_wrong_top1;
-		}
-
-		// Top-5
-		bool found_match = false;
-		for(int k=0; k<5; ++k){
-			long predicted_label = index_of_max(p);
-			p(predicted_label) = 0;
-			if(predicted_label == l.get_numeric_label()){
-				found_match = true;
-				break;
-			}
-		}
-		if(found_match){
-			++num_right;
-		}else{
-			++num_wrong;
+			++training_num_wrong;
 		}
 	}
 
-	cout << "Top-5 acc: " << num_right/(double)(num_right+num_wrong)                << endl;
-	cout << "Top-1 acc: " << num_right_top1/(double)(num_right_top1+num_wrong_top1) << endl;
-*/
+	for(int i=0; i<testing_images.size(); i++){
+		matrix<float, 1, 10> p = sum_rows(mat(snet(testing_images[i])));
+		if(index_of_max(p) == testing_labels[i]){
+			++testing_num_right;
+		}else{
+			++testing_num_wrong;
+		}
+	}
+
+	cout << "Training acc.: " << 100*(training_num_right/(double)(training_num_right+training_num_wrong)) << "%" << endl;
+	cout << "Testing acc.: "  << 100*(testing_num_right/(double)(testing_num_right+testing_num_wrong)) << "%" << endl;
+
 } catch(std::exception& e){
 	cout << e.what() << endl;
 }

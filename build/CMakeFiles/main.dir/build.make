@@ -95,7 +95,6 @@ main: CMakeFiles/main.dir/main.cpp.o
 main: CMakeFiles/main.dir/src/utility.cpp.o
 main: CMakeFiles/main.dir/build.make
 main: dlib_build/libdlib.a
-main: /usr/lib/x86_64-linux-gnu/libnsl.so
 main: /usr/lib/x86_64-linux-gnu/libSM.so
 main: /usr/lib/x86_64-linux-gnu/libICE.so
 main: /usr/lib/x86_64-linux-gnu/libX11.so

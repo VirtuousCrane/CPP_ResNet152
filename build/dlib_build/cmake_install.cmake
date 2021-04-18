@@ -1,4 +1,4 @@
-# Install script for directory: /home/akagi/dlib-19.6/dlib
+# Install script for directory: /home/akagi/dlib-19.22/dlib
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

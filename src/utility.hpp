@@ -38,6 +38,13 @@ namespace utility{
 		dlib::rand& rnd
 	);
 
+	void crop_image_dimension(
+		const dlib::matrix<dlib::rgb_pixel>& img      ,
+		dlib::matrix<dlib::rgb_pixel>&       crop     ,
+		int                                  dimension,
+		dlib::rand&                          rnd
+	);
+
 	void randomly_crop_images(
 		const dlib::matrix<dlib::rgb_pixel> &img         ,
 		dlib::array<dlib::matrix<dlib::rgb_pixel>>& crops,
@@ -49,6 +56,13 @@ namespace utility{
 		const std::string& root_directory ,
 		const std::string& image_path_file,
 		const std::string& label_file
+	);
+
+	void get_imagenet_dataset(
+		const std::string& image_path_file               ,
+		const std::string& label_path_file               ,
+		std::vector<dlib::matrix<dlib::rgb_pixel>>& images,
+		std::vector<unsigned long>&                labels
 	);
 }
 

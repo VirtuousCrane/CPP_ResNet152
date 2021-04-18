@@ -377,6 +377,14 @@ DLIB_USE_LAPACK:BOOL=ON
 //Disable this is you don't want to use the MKL DFTI FFT implementation
 DLIB_USE_MKL_FFT:STRING=OFF
 
+//Enable this if you have MKL installed and want to use the sequential
+// version instead of the multi-core version.
+DLIB_USE_MKL_SEQUENTIAL:BOOL=OFF
+
+//Enable this if you have MKL installed and want to use the tbb
+// version instead of the openmp version.
+DLIB_USE_MKL_WITH_TBB:BOOL=OFF
+
 //Path to a file.
 FREETYPE_INCLUDE_DIR_freetype2:PATH=/usr/include/freetype2
 
@@ -630,10 +638,10 @@ cblas_lib:FILEPATH=/usr/lib/x86_64-linux-gnu/libcblas.so
 dlib_BINARY_DIR:STATIC=/home/akagi/Documents/dlibTest/project/build/dlib_build
 
 //Dependencies for the target
-dlib_LIB_DEPENDS:STATIC=general;-lpthread;general;/usr/lib/x86_64-linux-gnu/libnsl.so;general;/usr/lib/x86_64-linux-gnu/libSM.so;general;/usr/lib/x86_64-linux-gnu/libICE.so;general;/usr/lib/x86_64-linux-gnu/libX11.so;general;/usr/lib/x86_64-linux-gnu/libXext.so;general;/usr/lib/x86_64-linux-gnu/libpng.so;general;/usr/lib/x86_64-linux-gnu/libz.so;general;/usr/lib/x86_64-linux-gnu/libjpeg.so;general;/usr/lib/x86_64-linux-gnu/libcblas.so;general;/usr/lib/x86_64-linux-gnu/liblapack.so;
+dlib_LIB_DEPENDS:STATIC=general;-lpthread;general;/usr/lib/x86_64-linux-gnu/libSM.so;general;/usr/lib/x86_64-linux-gnu/libICE.so;general;/usr/lib/x86_64-linux-gnu/libX11.so;general;/usr/lib/x86_64-linux-gnu/libXext.so;general;/usr/lib/x86_64-linux-gnu/libpng.so;general;/usr/lib/x86_64-linux-gnu/libz.so;general;/usr/lib/x86_64-linux-gnu/libjpeg.so;general;/usr/lib/x86_64-linux-gnu/libcblas.so;general;/usr/lib/x86_64-linux-gnu/liblapack.so;
 
 //Value Computed by CMake
-dlib_SOURCE_DIR:STATIC=/home/akagi/dlib-19.6/dlib
+dlib_SOURCE_DIR:STATIC=/home/akagi/dlib-19.22/dlib
 
 //Path to a library.
 lapack_lib:FILEPATH=/usr/lib/x86_64-linux-gnu/liblapack.so
@@ -670,6 +678,9 @@ nsllib:FILEPATH=/usr/lib/x86_64-linux-gnu/libnsl.so
 
 //Path to a library.
 openmp_libarires:FILEPATH=/usr/lib/x86_64-linux-gnu/libiomp5.so
+
+//Path to a library.
+openmp_libraries:FILEPATH=/usr/lib/x86_64-linux-gnu/libiomp5.so
 
 //Path to a library.
 pkgcfg_lib_LAPACK_REFERENCE_lapack:FILEPATH=/usr/lib/x86_64-linux-gnu/atlas/liblapack.so
@@ -978,6 +989,8 @@ FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v0.29.1()]
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //Details about finding X11
 FIND_PACKAGE_MESSAGE_DETAILS_X11:INTERNAL=[/usr/include][/usr/lib/x86_64-linux-gnu/libX11.so][c ][v()]
+//Have function cblas_ddot
+FOUND_BLAS_HAS_CBLAS:INTERNAL=1
 //ADVANCED property for variable: FREETYPE_INCLUDE_DIR_freetype2
 FREETYPE_INCLUDE_DIR_freetype2-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: FREETYPE_INCLUDE_DIR_ft2build
@@ -1010,6 +1023,10 @@ JPEG_INCLUDE_DIR-ADVANCED:INTERNAL=1
 JPEG_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: JPEG_LIBRARY_RELEASE
 JPEG_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//Have function sgesv_
+LAPACK_FOUND_C_MANGLED:INTERNAL=1
+//Have function sgesv
+LAPACK_FOUND_C_UNMANGLED:INTERNAL=
 LAPACK_REFERENCE_CFLAGS:INTERNAL=-I/usr/include/x86_64-linux-gnu
 LAPACK_REFERENCE_CFLAGS_I:INTERNAL=
 LAPACK_REFERENCE_CFLAGS_OTHER:INTERNAL=
@@ -1051,6 +1068,8 @@ LIBJPEG_IS_GOOD:INTERNAL=1
 LIBPNG_IS_GOOD:INTERNAL=1
 //Have function sgetrf_single
 OPENBLAS_HAS_LAPACK:INTERNAL=
+//Have function cblas_ddot
+PKGCFG_HAVE_CBLAS:INTERNAL=
 //ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
 PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
 PKG_FONTCONFIG_CFLAGS:INTERNAL=-I/usr/include/uuid;-I/usr/include/freetype2;-I/usr/include/libpng16
@@ -1255,6 +1274,8 @@ mkl_thread-ADVANCED:INTERNAL=1
 nsllib-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: openmp_libarires
 openmp_libarires-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: openmp_libraries
+openmp_libraries-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_LAPACK_REFERENCE_lapack
 pkgcfg_lib_LAPACK_REFERENCE_lapack-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_PKG_FONTCONFIG_fontconfig
@@ -1268,4 +1289,8 @@ socketlib-ADVANCED:INTERNAL=1
 sqlite-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: sqlite_path
 sqlite_path-ADVANCED:INTERNAL=1
+//Result of TRY_COMPILE
+test_for_libjpeg_worked:INTERNAL=TRUE
+//Result of TRY_COMPILE
+test_for_libpng_worked:INTERNAL=TRUE
 

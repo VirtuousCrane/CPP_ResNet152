@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(mnist)
 
 include_directories(include)
-include(~/dlib-19.6/dlib/cmake)
+include(~/dlib-19.22/dlib/cmake)
 
 add_executable(main main.cpp src/utility.cpp src/utility.hpp)
 target_link_libraries(main dlib::dlib)

@@ -84,6 +84,21 @@ namespace utility{
 		apply_random_color_offset(crop, rnd);
 	}
 
+	void crop_image_dimension(
+		const matrix<rgb_pixel>& img      ,
+		matrix<rgb_pixel>&       crop     ,
+		int                      dimension,
+		dlib::rand&              rnd
+		){
+		auto rect = random_crop(img, rnd);
+		extract_image_chip(img, chip_details(rect, chip_dims(dimension, dimension)), crop);
+
+		if(rnd.get_random_double() > 0.5){
+			crop = fliplr(crop);
+		}
+		apply_random_color_offset(crop, rnd);
+	}
+
 	void randomly_crop_images(
 			const matrix<rgb_pixel>& img,
 			dlib::array<matrix<rgb_pixel>>& crops,
@@ -143,5 +158,43 @@ namespace utility{
 		}
 
 		return results;
+	}
+
+	void get_imagenet_dataset(
+		const string& image_path_file,
+		const string& label_path_file,
+		std::vector<dlib::matrix<dlib::rgb_pixel>>& images,
+		std::vector<unsigned long>&                 labels
+	){
+		std::cout << "Fetching image dataset" << std::endl;
+
+		ifstream label_path(label_path_file);
+		ifstream image_path(image_path_file);
+
+		string label, path              ;
+		string previous_label       = "";
+		unsigned long numeric_label = -1;
+
+		dlib::rand rnd(time(0));
+		while(getline(label_path, label) && getline(image_path, path)){
+			dlib::matrix<dlib::rgb_pixel> img;
+			while(true){
+				try{
+					dlib::load_image(img, path);
+					crop_image_dimension(img, img, 224, rnd);
+					break;
+				}catch(...){
+					continue;
+				}
+			}
+
+			if(label != previous_label){
+				++numeric_label;
+				previous_label = label;
+			}
+
+			images.push_back(img)  ;
+			labels.push_back(numeric_label);
+		}
 	}
 }

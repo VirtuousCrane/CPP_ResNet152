@@ -40,22 +40,15 @@ def process_lines(label_mapping):
 if __name__ == "__main__":
 	mapping = get_mapping();
 	resource_dict = process_lines(mapping);
+	resource_keys = [k for k in resource_dict.keys()];
 
-#	f = open("train_test/key_file_15.txt", "w");
-#	d = open("train_test/data_path_15.txt", "w");
-	f = open("train_test/ex_tiny_val_file_15.txt", "w");
-	d = open("train_test/ex_tiny_val_data_15.txt", "w");
-	for key in resource_dict.keys():
-		l = resource_dict[key];
-		#for i in range(15):
-		#	if(len(l) != 0):
-		#		f.write(key + "\n");
-		#		d.write(l[i].split("/")[-1] + "\n");
+	f = open("train_test/test_imagenet_10_file.txt", "w");
+	d = open("train_test/test_imagenet_10_data.txt", "w");
+	for i in range(10):
+		l = resource_dict[resource_keys[i]];
 		if(len(l) != 0):
-		#	for i in range(5):
-		#		f.write(key + "\n");
-		#		d.write(l[-i].split("/")[-1] + "\n");
-			f.write(key + "\n");
-			d.write(l[-1].split("/")[-1] + "\n");
+			for j in range(-1, -11, -1):
+				f.write(resource_keys[i] + "\n");
+				d.write(l[j].split("/")[-1] + "\n");
 	f.close();
 	d.close();
